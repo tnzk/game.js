@@ -6,7 +6,7 @@ var gjs_sub_stat = 0;
 var gjs_continue = 'gjsystemnothignshappened';
 var gjs_done     = 'gjsystemeverythingsdone';
 
-var gjs_controllables = [];
+var gjs_units = [];
 
 var gjs_keys = [];
 var gjs_key_left   = 37;
@@ -39,13 +39,20 @@ function gj_start(id)
     }
 
     // Apply
-    for( var i = 0; i < gjs_controllables.length; i++){
-      obj = gjs_controllables[i];
+    for( var i = 0; i < gjs_units.length; i++){
+      obj = gjs_units[i];
       speed = obj.speed ? obj.speed : gjs_console.width() >> 7;
-      if( gjs_keys[gjs_key_left])   obj.move( -speed, 0);
-      if( gjs_keys[gjs_key_top])    obj.move( 0, -speed);
-      if( gjs_keys[gjs_key_right])  obj.move( speed, 0);
-      if( gjs_keys[gjs_key_bottom]) obj.move( 0, speed);
+
+      for( var j = 0; j < obj.types.length; j++){
+        switch(obj.types[j]){
+	  case 'controllable':
+            if( gjs_keys[gjs_key_left])   obj.move( -speed, 0);
+	    if( gjs_keys[gjs_key_top])    obj.move( 0, -speed);
+	    if( gjs_keys[gjs_key_right])  obj.move( speed, 0);
+	    if( gjs_keys[gjs_key_bottom]) obj.move( 0, speed);
+	    break;
+	}
+      }
     }
 
     // Game stasus loop
@@ -117,15 +124,20 @@ function gj_add_unit( name, x, y, w, h){
   obj.y(y);
   obj.width(w);
   obj.height(h);
+  obj.types = [];
 
   return obj;
 }
 
-function gj_attr( element, attr)
+function gj_attr( obj, attr, routine)
 {
-  // Apply an attribute
+  gjs_units.push(obj);
+  obj.types.push(attr);
   switch(attr){
-    case 'controllable': gjs_controllables.push(element);
-    case 'controllable': gjs_controllables.push(element);
+    case 'controllable':
+      break;
+    case 'routine':
+      obj.routine = routine;
+      break;
   }
 }

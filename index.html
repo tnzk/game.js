@@ -23,14 +23,13 @@
       bar.speed = 5;
 
       ball = gj_add_unit( 'ball', 270, 100, 20, 20);
-      gj_attr(ball, 'controllable');
+      gj_attr(ball, 'routine', function(){
+        return { x: 2, y:4};
+      });
       ball.speed = 1;
     },
     end:   function(){ alert('it ends')},
     loop:  function(){
-      cnt++;
-      // bar.x(cnt);
-      // if( cnt > 5) return gj_end();
       return gj_continue();
     }
   };
