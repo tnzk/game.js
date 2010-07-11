@@ -21,12 +21,14 @@
       bar = gj_add_unit( 'bar', 270, 450, 100, 10);
       gj_attr(bar, 'controllable');
       bar.speed = 5;
+      bar.css('background-color', 'black');
 
       ball = gj_add_unit( 'ball', 270, 100, 20, 20);
       gj_attr(ball, 'routine', function(){
-        return { x: 2, y:4};
+        return { x: 0, y: 5};
       });
       ball.speed = 1;
+      ball.css('background-color', 'red');
     },
     end:   function(){ alert('it ends')},
     loop:  function(){

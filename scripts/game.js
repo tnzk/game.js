@@ -31,18 +31,21 @@ function gj_start(id)
   }
 
   var gjs_system_loop = function(){
-
+    //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
     // Constructor
+    //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
     if( gjs_sub_stat == 0){
       if( gjs_stat.begin) gjs_stat.begin();
       gjs_sub_stat = 1;
     }
 
-    // Apply
+    //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+    // Main game loop
+    //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+    //   Execute actions of objects throuth their attributes
     for( var i = 0; i < gjs_units.length; i++){
       obj = gjs_units[i];
       speed = obj.speed ? obj.speed : gjs_console.width() >> 7;
-
       for( var j = 0; j < obj.types.length; j++){
         switch(obj.types[j]){
 	  case 'controllable':
@@ -51,16 +54,40 @@ function gj_start(id)
 	    if( gjs_keys[gjs_key_right])  obj.move( speed, 0);
 	    if( gjs_keys[gjs_key_bottom]) obj.move( 0, speed);
 	    break;
+	  case 'routine':
+            var d = obj.routine();
+            obj.move( d.x, d.y);
+            break;
 	}
       }
     }
-
-    // Game stasus loop
+    //   Execute process of game status and check if it has done or not
     var gjs_tmp_stat = {name:gjs_continue};
     if( gjs_stat.loop) gjs_tmp_stat = gjs_stat.loop();
     if( gjs_tmp_stat.name != gjs_continue) gjs_sub_stat = 2;
- 
+    //   Collision check
+    for( var i = 0; i < gjs_units.length; i++){
+      var me = gjs_units[i];
+      var points = [ { x: me.x(),              y: me.y()},
+                     { x: me.x(),              y: me.y() + me.height()},
+                     { x: me.x() + me.width(), y: me.y() + me.height()},
+                     { x: me.x() + me.width(), y: me.y()}
+                   ];
+      for( var j = 0; j < gjs_units.length; j++){
+        if( i == j) continue;
+        var enm = gjs_units[j];
+        for( var k = 0; k < points.length; k++){
+          var gls_x = points[k].x;
+          var gls_y = points[k].y;
+          if(    gls_x < enm.x() + enm.width()  && gls_x > enm.x()
+              && gls_y < enm.y() + enm.height() && gls_y > enm.y() ) gjs_console.css('background-color', '#00ff99');
+        }
+      }
+    }
+
+    //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
     // Destructor
+    //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
     if(( gjs_sub_stat == 2) && gjs_stat.end){
       gjs_stat.end();
       gjs_sub_stat = 0;
@@ -93,7 +120,6 @@ function gj_add_unit( name, x, y, w, h){
   var base_pos = gjs_console.offset();
   gjs_console.append("<div id=\""+name+"\"></div>");
   obj = $('#'+name)
-  obj.css('background-color', 'red');
 
   // Utility methods to manupilate position
   obj.x = function( x){
