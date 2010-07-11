@@ -1,0 +1,27 @@
+* { margin:0; padding:0;}
+
+body {
+    background-color: #000;
+    text-align: center;
+}
+
+div#arcade {
+    background-color: #fff;
+    width: 1000px;
+    height: 100%;
+    position: absolute;
+    left: 50%;
+    margin-left: -500px;
+}
+
+div#game {
+    background-color: #eee;
+    width:  640px;
+    height: 480px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -320px;
+    margin-top:  -240px;
+}
+

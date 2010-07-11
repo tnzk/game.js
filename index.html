@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="styles/base.css" />
+  <script type="text/javascript" src="scripts/jquery-1.4.2.min.js"></script>
+  <script type="text/javascript" src="scripts/game.js"></script>
+</head>
+<body>
+  <div id="arcade">
+    <div id="debug"></div>
+    <div id="game">
+    </div>
+  </div>
+</body>
+<script type="text/javascript">
+  var cnt = 0;
+  kuzushi = {
+    name: 'kuzushi',
+    begin: function(){
+      bar = gj_add_unit( 'bar', 270, 450, 100, 10);
+      gj_attr(bar, 'controllable');
+      bar.speed = 5;
+
+      ball = gj_add_unit( 'ball', 270, 100, 20, 20);
+      gj_attr(ball, 'controllable');
+      ball.speed = 1;
+    },
+    end:   function(){ alert('it ends')},
+    loop:  function(){
+      cnt++;
+      // bar.x(cnt);
+      // if( cnt > 5) return gj_end();
+      return gj_continue();
+    }
+  };
+
+  gj_status(kuzushi); // Set game status
+  gj_start('game');   // Start the game with
+                      // specified container to show it
+</script>
+</html>
